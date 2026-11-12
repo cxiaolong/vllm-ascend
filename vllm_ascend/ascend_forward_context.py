@@ -10,12 +10,14 @@ from vllm.distributed import get_dp_group, get_ep_group, get_tensor_model_parall
 from vllm.forward_context import BatchDescriptor, get_forward_context, set_forward_context
 from vllm.logger import logger
 
+from vllm_ascend import envs as ascend_envs
 from vllm_ascend.ascend_config import get_ascend_config, is_mega_moe_supported
 from vllm_ascend.device.hardware_profile import (
     HardwareCapability,
     MoECommPolicy,
     get_current_hardware_profile,
 )
+from vllm_ascend.lora.kimi.configuration import is_kimi_config
 from vllm_ascend.mrv2_utils import use_v2_model_runner
 from vllm_ascend.quantization.quant_type import A5_SUPPORT_MEGA_MOE_QUANT_TYPES, QuantType
 from vllm_ascend.utils import (
@@ -410,6 +412,9 @@ def select_moe_comm_method(
     """
     if not is_moe_model(vllm_config):
         return None
+
+    if ascend_envs.VLLM_ASCEND_ENABLE_KIMI_LORA and vllm_config.lora_config is not None and is_kimi_config(vllm_config):
+        return MoECommType.ALLGATHER
 
     mc2_tokens_capacity = get_mc2_tokens_capacity()
     moe_comm_policy = get_current_hardware_profile().moe_comm_policy

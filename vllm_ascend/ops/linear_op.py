@@ -49,6 +49,7 @@ from vllm.logger import logger
 from vllm.model_executor.layers.linear import UnquantizedLinearMethod
 from vllm.models.common.ops.sequence_parallel import sp_reduce_scatter
 
+from vllm_ascend import envs as ascend_envs
 from vllm_ascend.distributed.parallel_state import (
     get_mlp_tp_group,
     get_otp_group,
@@ -243,6 +244,9 @@ class KimiOProjMMReduceScatterOp(CustomRowParallelOp):
         return output
 
     def _can_fuse(self, input_parallel: torch.Tensor, weight: torch.Tensor) -> bool:
+        # Native Kimi LoRA uses the unfused projection + reduce-scatter path.
+        if ascend_envs.VLLM_ASCEND_ENABLE_KIMI_LORA:
+            return False
         # Keep decode and mixed batches on the existing MM + RS path.
         if is_forward_context_available():
             attn_metadata = get_forward_context().attn_metadata

@@ -68,6 +68,7 @@ import vllm_ascend.patch.worker.patch_model_state  # noqa
 import vllm_ascend.patch.worker.patch_block_table  # noqa
 import vllm_ascend.patch.worker.patch_attn_utils  # noqa
 import vllm_ascend.patch.worker.patch_model_runner  # noqa
+import vllm_ascend.patch.worker.patch_kimi_lora  # noqa
 
 import vllm_ascend.patch.worker.patch_eagle_speculator  # noqa
 import vllm_ascend.patch.worker.patch_dflash_speculator  # noqa

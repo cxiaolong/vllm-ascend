@@ -1,0 +1,6 @@
+# Local draft: replace this filename and pr with the assigned PR number before submission.
+pr: null
+entries:
+  - category: feature
+    text: Added an opt-in experimental native/eager Kimi K3.1 online LoRA implementation with packed projection and absorbed DSA updates and a MindSpeed adapter converter. The MRv2 port requires fresh NPU end-to-end qualification.
+    model: kimi-k3.1

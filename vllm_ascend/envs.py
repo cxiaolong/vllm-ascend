@@ -49,6 +49,9 @@ def _bool_env(name: str, default: bool) -> bool:
 
 
 env_variables: dict[str, Callable[[], Any]] = {
+    # Kimi native/eager LoRA, including ALLGATHER and unfused O projection.
+    # Boolean 0/1; default disabled; non-sensitive. Requires BF16 TP8.
+    "VLLM_ASCEND_ENABLE_KIMI_LORA": lambda: _bool_env("VLLM_ASCEND_ENABLE_KIMI_LORA", False),
     # max compile thread number for package building. Usually, it is set to
     # the number of CPU cores. If not set, the default value is None, which
     # means all number of CPU cores will be used.

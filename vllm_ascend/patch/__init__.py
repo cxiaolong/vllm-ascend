@@ -1765,3 +1765,15 @@
 #       Remove this patch when upstream provides a backend capability hook for
 #       enabling MoE sequence parallelism with DP=1.
 #
+
+# ** File: patch_kimi_lora.py / lora/kimi/registration.py **
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Target: vLLM LoRAModelManager and NPUModelRunner LoRA dummy lifecycle.
+# Why: Kimi packed projections and absorbed SFA KV-B bypass ordinary LoRA
+#      wrappers; idle DP runs must not evict real adapters.
+# How: Explicit opt-in general plugin installs model/manager wrappers once per
+#      process; worker patch attaches runner-specific idle protection. Banks are
+#      manager-owned, token layouts are ContextVar-scoped.
+# Related PR: none yet; local import of the 2026-11-11 validated experiment.
+# Future plan: upstream packed/SFA adapter hooks and idle base-only mappings,
+#      then remove these process-local patches. No graph/CP/PP certification.
